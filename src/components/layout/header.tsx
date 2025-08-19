@@ -2,27 +2,18 @@
 
 import Link from "next/link";
 import { DownloadCloud, Menu } from "lucide-react";
-import { usePathname } from "next/navigation";
-import { cn } from "@/lib/utils";
-import { ThemeToggle } from "@/components/theme-toggle";
 import {
   Sheet,
   SheetContent,
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useState, Suspense } from "react";
+import { NavigationBar } from "./navigation-bar";
+import { ThemeToggle } from "../theme-toggle";
 
 export function Header() {
-  const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
-  const navLinks = [
-    { href: "/", label: "Home" },
-    { href: "/privacy-policy", label: "Privacy and Policy" },
-    { href: "/terms-of-service", label: "Terms and Conditions" },
-    { href: "/about-us", label: "About Us" },
-  ];
 
   return (
     <header className="bg-background/80 sticky top-0 z-50 w-full border-b backdrop-blur">
@@ -34,18 +25,9 @@ export function Header() {
         
         <div className="flex items-center justify-end gap-4">
            <nav className="hidden md:flex items-center space-x-6 text-sm font-medium">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={cn(
-                  "transition-colors hover:text-primary whitespace-nowrap",
-                  pathname === link.href ? "text-primary" : "text-muted-foreground"
-                )}
-              >
-                {link.label}
-              </Link>
-            ))}
+            <Suspense>
+              <NavigationBar onLinkClick={() => {}} />
+            </Suspense>
           </nav>
            <ThemeToggle />
            <div className="md:hidden">
@@ -63,19 +45,9 @@ export function Header() {
                     <span className="text-xl font-bold">Media Bitesz</span>
                   </Link>
                   <div className="flex flex-col items-start gap-4">
-                    {navLinks.map((link) => (
-                      <Link
-                        key={link.href}
-                        href={link.href}
-                        onClick={() => setIsMobileMenuOpen(false)}
-                        className={cn(
-                          "text-base",
-                          pathname === link.href ? "text-primary" : "text-muted-foreground"
-                        )}
-                      >
-                        {link.label}
-                      </Link>
-                    ))}
+                    <Suspense>
+                      <NavigationBar onLinkClick={() => setIsMobileMenuOpen(false)} isMobile />
+                    </Suspense>
                   </div>
                 </div>
               </SheetContent>
