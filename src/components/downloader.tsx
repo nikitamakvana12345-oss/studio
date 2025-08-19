@@ -18,11 +18,15 @@ import { Progress } from "@/components/ui/progress";
 import { Download, Loader2, Music, Video } from "lucide-react";
 import Image from 'next/image';
 import { useToast } from "@/hooks/use-toast";
-import { getVideoInfo, GetVideoInfoOutput } from "@/ai/flows/video-info";
 
 const formSchema = z.object({
   url: z.string().url({ message: "Please enter a valid YouTube URL." }),
 });
+
+type VideoDetails = {
+  title: string;
+  thumbnailUrl: string;
+};
 
 type DownloadState = {
   format: 'MP4' | 'MP3';
@@ -32,7 +36,7 @@ type DownloadState = {
 
 export function Downloader() {
   const [isProcessing, setIsProcessing] = useState(false);
-  const [videoDetails, setVideoDetails] = useState<GetVideoInfoOutput | null>(null);
+  const [videoDetails, setVideoDetails] = useState<VideoDetails | null>(null);
   const [downloadState, setDownloadState] = useState<DownloadState | null>(null);
   const { toast } = useToast();
 
@@ -51,10 +55,22 @@ export function Downloader() {
     try {
       const url = new URL(values.url);
       if (!/youtube\.com|youtu\.be/.test(url.hostname)) {
-        throw new Error("Invalid YouTube URL");
+        throw new Error("Invalid YouTube URL. Please use a youtube.com or youtu.be link.");
       }
-      const videoInfo = await getVideoInfo({ url: values.url });
-      setVideoDetails(videoInfo);
+      
+      const response = await fetch(`https://www.youtube.com/oembed?url=${encodeURIComponent(values.url)}&format=json`);
+
+      if (!response.ok) {
+        throw new Error("Could not extract video details. The video might be private or removed.");
+      }
+
+      const data = await response.json();
+      
+      setVideoDetails({
+        title: data.title,
+        thumbnailUrl: data.thumbnail_url,
+      });
+
     } catch (error: any) {
       toast({
         variant: "destructive",
