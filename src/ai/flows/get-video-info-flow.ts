@@ -5,7 +5,7 @@
  * @fileoverview A Genkit flow for extracting YouTube video information.
  *
  * This file defines a flow that takes a YouTube URL, extracts the video ID
- * and title using an AI prompt, and then uses ytdl-core to get a direct
+ * and title using an AI prompt, and then uses @distube/ytdl-core to get a direct
 
  * download URL for the video.
  */
@@ -17,7 +17,7 @@ import {
   type VideoInfoInput,
   type VideoInfo,
 } from '@/ai/schemas/video-info-schemas';
-import ytdl from 'ytdl-core';
+import ytdl from '@distube/ytdl-core';
 import { z } from 'zod';
 
 const YtdlOutputSchema = z.object({
