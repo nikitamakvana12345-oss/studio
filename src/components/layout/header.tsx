@@ -23,21 +23,21 @@ export function Header() {
           <DownloadCloud className="h-6 w-6 text-primary" />
           <span className="font-bold">VideoRipper</span>
         </Link>
-        <nav className="hidden md:flex items-center space-x-6 text-sm font-medium ml-auto">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className={cn(
-                "transition-colors hover:text-primary",
-                pathname === link.href ? "text-primary" : "text-muted-foreground"
-              )}
-            >
-              {link.label}
-            </Link>
-          ))}
-        </nav>
         <div className="ml-auto flex items-center gap-4">
+           <nav className="hidden md:flex items-center space-x-6 text-sm font-medium">
+            {navLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={cn(
+                  "transition-colors hover:text-primary",
+                  pathname === link.href ? "text-primary" : "text-muted-foreground"
+                )}
+              >
+                {link.label}
+              </Link>
+            ))}
+          </nav>
            <ThemeToggle />
         </div>
       </div>
