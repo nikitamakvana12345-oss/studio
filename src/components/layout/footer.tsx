@@ -7,7 +7,7 @@ export function Footer() {
         <div className="flex items-center gap-4 text-sm text-muted-foreground">
             <Link href="/" className="transition-colors hover:text-primary">Home</Link>
             <Link href="/privacy-policy" className="transition-colors hover:text-primary">Privacy Policy</Link>
-            <Link href="/terms-of-service" className="transition-colors hover:text-primary">Terms of Service</Link>
+            <Link href="/terms-and-conditions" className="transition-colors hover:text-primary">Terms & Conditions</Link>
             <Link href="/about-us" className="transition-colors hover:text-primary">About Us</Link>
         </div>
         <p className="text-sm text-muted-foreground text-center">
