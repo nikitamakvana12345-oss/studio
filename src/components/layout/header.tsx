@@ -27,27 +27,24 @@ export function Header() {
   return (
     <header className="bg-background/80 sticky top-0 z-50 w-full border-b backdrop-blur">
       <div className="container flex h-16 items-center">
-        <div className="flex-1 flex items-center justify-start">
+        <div className="flex-none flex items-center justify-start">
           <Link href="/" className="flex items-center space-x-2">
             <DownloadCloud className="h-6 w-6 text-primary" />
-            <span className="font-bold md:hidden">Media Bitesz</span>
+            <span className="font-bold">Media Bitesz</span>
           </Link>
         </div>
 
-        <div className="flex-1 flex items-center justify-center">
-          <Link href="/" className="hidden md:flex items-center space-x-2">
-            <span className="text-2xl font-bold">Media Bitesz</span>
-          </Link>
+        <div className="flex-grow flex items-center justify-center">
         </div>
         
-        <div className="flex flex-1 items-center justify-end gap-4">
+        <div className="flex-none flex items-center justify-end gap-4">
            <nav className="hidden md:flex items-center space-x-6 text-sm font-medium">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
                 className={cn(
-                  "transition-colors hover:text-primary",
+                  "transition-colors hover:text-primary whitespace-nowrap",
                   pathname === link.href ? "text-primary" : "text-muted-foreground"
                 )}
               >
