@@ -18,6 +18,15 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Download, Loader2, Video, ClipboardPaste } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 const formSchema = z.object({
   url: z.string().url({ message: "Please enter a valid YouTube URL." }),
@@ -38,6 +47,7 @@ export function Downloader() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [videoDetails, setVideoDetails] = useState<VideoDetails | null>(null);
   const [downloadState, setDownloadState] = useState<DownloadState | null>(null);
+  const [showDownloadAlert, setShowDownloadAlert] = useState(false);
   const { toast } = useToast();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -144,18 +154,12 @@ export function Downloader() {
       timer = setTimeout(() => {
         setDownloadState(prev => prev ? { ...prev, progress: prev.progress + 5 } : null);
       }, 150);
-    } else if (downloadState?.progress === 100) {
-      toast({
-        title: "Download Complete!",
-        description: `Your ${downloadState.format} file is ready.`,
-        className: "bg-accent text-accent-foreground border-green-300"
-      });
-      setTimeout(() => {
-        setDownloadState(prev => prev ? { ...prev, isDownloading: false } : null);
-      }, 1000);
+    } else if (downloadState?.progress === 100 && downloadState.isDownloading) {
+      setShowDownloadAlert(true);
+      setDownloadState(prev => prev ? { ...prev, isDownloading: false } : null);
     }
     return () => clearTimeout(timer);
-  }, [downloadState, toast]);
+  }, [downloadState]);
 
   return (
     <div className="space-y-8">
@@ -260,6 +264,22 @@ export function Downloader() {
           </CardContent>
         </Card>
       )}
+      
+      <AlertDialog open={showDownloadAlert} onOpenChange={setShowDownloadAlert}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Download Complete!</AlertDialogTitle>
+            <AlertDialogDescription>
+              Your video has been successfully downloaded.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogAction onClick={() => setShowDownloadAlert(false)}>
+              OK
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       <div className="mt-8 flex justify-center">
         <div className="w-full h-24 bg-muted/50 border border-dashed rounded-lg flex items-center justify-center text-muted-foreground">
