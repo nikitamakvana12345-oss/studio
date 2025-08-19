@@ -18,15 +18,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Download, Loader2, Video, ClipboardPaste } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
 
 const formSchema = z.object({
   url: z.string().url({ message: "Please enter a valid YouTube URL." }),
@@ -47,7 +38,6 @@ export function Downloader() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [videoDetails, setVideoDetails] = useState<VideoDetails | null>(null);
   const [downloadState, setDownloadState] = useState<DownloadState | null>(null);
-  const [showDownloadAlert, setShowDownloadAlert] = useState(false);
   const { toast } = useToast();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -155,11 +145,14 @@ export function Downloader() {
         setDownloadState(prev => prev ? { ...prev, progress: prev.progress + 5 } : null);
       }, 150);
     } else if (downloadState?.progress === 100 && downloadState.isDownloading) {
-      setShowDownloadAlert(true);
+      toast({
+        title: "Download Complete!",
+        description: "Your video has been successfully downloaded.",
+      });
       setDownloadState(prev => prev ? { ...prev, isDownloading: false } : null);
     }
     return () => clearTimeout(timer);
-  }, [downloadState]);
+  }, [downloadState, toast]);
 
   return (
     <div className="space-y-8">
@@ -236,18 +229,18 @@ export function Downloader() {
         <Card className="w-full shadow-lg animate-in fade-in-50 duration-500">
           <CardContent className="p-6">
             <div className="flex flex-col items-center gap-4">
-              <div className="w-full aspect-video">
-                <iframe
-                  src={`https://www.youtube.com/embed/${videoDetails.videoId}`}
-                  title={videoDetails.title}
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                  className="w-full h-full rounded-lg"
-                  data-ai-hint="video embed"
-                ></iframe>
-              </div>
-              <div className="w-full space-y-4 text-center">
-                <h3 className="text-xl font-bold">{videoDetails.title}</h3>
+               <div className="w-full space-y-4 text-center">
+                 <h3 className="text-xl font-bold">{videoDetails.title}</h3>
+                <div className="w-full aspect-video">
+                  <iframe
+                    src={`https://www.youtube.com/embed/${videoDetails.videoId}`}
+                    title={videoDetails.title}
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    className="w-full h-full rounded-lg"
+                    data-ai-hint="video embed"
+                  ></iframe>
+                </div>
                 <div className="flex justify-center">
                   <Button onClick={() => handleDownload('MP4')} size="lg" disabled={downloadState?.isDownloading}>
                     <Download className="mr-2" /> Download MP4
@@ -264,22 +257,6 @@ export function Downloader() {
           </CardContent>
         </Card>
       )}
-      
-      <AlertDialog open={showDownloadAlert} onOpenChange={setShowDownloadAlert}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Download Complete!</AlertDialogTitle>
-            <AlertDialogDescription>
-              Your video has been successfully downloaded.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogAction onClick={() => setShowDownloadAlert(false)}>
-              OK
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
 
       <div className="mt-8 flex justify-center">
         <div className="w-full h-24 bg-muted/50 border border-dashed rounded-lg flex items-center justify-center text-muted-foreground">
