@@ -19,8 +19,8 @@ export function Header() {
 
   const navLinks = [
     { href: "/", label: "Home" },
-    { href: "/privacy-policy", label: "Privacy" },
-    { href: "/terms-of-service", label: "Terms" },
+    { href: "/privacy-policy", label: "Privacy and Policy" },
+    { href: "/terms-of-service", label: "Terms and Conditions" },
     { href: "/about-us", label: "About Us" },
   ];
 
