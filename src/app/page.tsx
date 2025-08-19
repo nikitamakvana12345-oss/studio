@@ -88,6 +88,54 @@ export default function Home() {
               Downloading videos from YouTube is against their terms of service. You should only download videos if you have permission from the copyright holder or if the video is in the public domain. Please respect copyright laws.
             </AccordionContent>
           </AccordionItem>
+          <AccordionItem value="item-4">
+            <AccordionTrigger className="text-lg">What video formats and qualities can I download?</AccordionTrigger>
+            <AccordionContent className="text-base text-muted-foreground">
+              You can download videos in MP4 format. We provide the highest quality available from the source video, up to 1080p. We are working on supporting more formats and qualities in the future.
+            </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="item-5">
+            <AccordionTrigger className="text-lg">Can I download age-restricted videos?</AccordionTrigger>
+            <AccordionContent className="text-base text-muted-foreground">
+              Currently, our service does not support downloading age-restricted content from YouTube. You must be signed in to YouTube to view such content, and our downloader cannot bypass this restriction.
+            </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="item-6">
+            <AccordionTrigger className="text-lg">Are there any limits on the number of downloads?</AccordionTrigger>
+            <AccordionContent className="text-base text-muted-foreground">
+              There are no strict limits on the number of videos you can download. However, we ask that you use the service fairly. Excessive use may be throttled to ensure a stable experience for all users.
+            </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="item-7">
+            <AccordionTrigger className="text-lg">Do I need to install any software?</AccordionTrigger>
+            <AccordionContent className="text-base text-muted-foreground">
+              No, Media Bitesz is a fully web-based tool. You do not need to install any browser extensions or software on your device. Everything works directly in your web browser.
+            </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="item-8">
+            <AccordionTrigger className="text-lg">Why is the download speed slow sometimes?</AccordionTrigger>
+            <AccordionContent className="text-base text-muted-foreground">
+              Download speed can be affected by several factors, including your internet connection, the size of the video, and the current load on our servers. We strive to provide the fastest speeds possible.
+            </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="item-9">
+            <AccordionTrigger className="text-lg">Can I download entire playlists or channels?</AccordionTrigger>
+            <AccordionContent className="text-base text-muted-foreground">
+              Currently, we only support downloading individual videos. We are exploring the possibility of adding support for downloading entire playlists or channels in a future update.
+            </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="item-10">
+            <AccordionTrigger className="text-lg">What happens if a video has no sound?</AccordionTrigger>
+            <AccordionContent className="text-base text-muted-foreground">
+              Some YouTube videos, especially at higher qualities like 1080p and above, store their audio and video streams separately. Our service automatically merges them for you. If a downloaded video has no sound, it might be an issue with the source video itself.
+            </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="item-11">
+            <AccordionTrigger className="text-lg">How do you handle my privacy?</AccordionTrigger>
+            <AccordionContent className="text-base text-muted-foreground">
+              We take your privacy very seriously. We do not store any of the videos you download or your download history. All processes are anonymous. For more details, please read our Privacy Policy.
+            </AccordionContent>
+          </AccordionItem>
         </Accordion>
       </section>
     </div>
