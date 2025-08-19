@@ -18,6 +18,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Download, Loader2, Video, ClipboardPaste } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { getVideoInfo } from "@/app/actions/download";
 
 const formSchema = z.object({
   url: z.string().url({ message: "Please enter a valid YouTube URL." }),
@@ -26,10 +27,11 @@ const formSchema = z.object({
 type VideoDetails = {
   title: string;
   videoId: string;
+  author: string;
+  thumbnail: string;
 };
 
 type DownloadState = {
-  format: 'MP4';
   progress: number;
   isDownloading: boolean;
 };
@@ -97,13 +99,15 @@ export function Downloader() {
       if (!response.ok) {
         const errorData = await response.text();
         console.error("YouTube oEmbed error:", errorData);
-        throw new Error("Could not extract video details. The video might be private, region-locked, or removed.");
+        throw new Error("Could not fetch video details. The video might be private, region-locked, or removed.");
       }
 
       const data = await response.json();
       
       setVideoDetails({
         title: data.title,
+        author: data.author_name,
+        thumbnail: data.thumbnail_url,
         videoId: videoId,
       });
 
@@ -111,7 +115,7 @@ export function Downloader() {
       toast({
         variant: "destructive",
         title: "Error fetching video",
-        description: error.message || "Could not extract video details. Please check the URL and try again.",
+        description: error.message || "Could not fetch video details. Please check the URL and try again.",
       });
       setVideoDetails(null);
     } finally {
@@ -119,9 +123,61 @@ export function Downloader() {
     }
   }
 
-  const handleDownload = (format: 'MP4') => {
-    setDownloadState({ format, progress: 0, isDownloading: true });
+  const handleDownload = async () => {
+    if (!videoDetails) return;
+
+    setDownloadState({ progress: 0, isDownloading: true });
+
+    try {
+      const { videoUrl, title } = await getVideoInfo(videoDetails.videoId);
+
+      const response = await fetch(videoUrl);
+      const reader = response.body?.getReader();
+      const contentLength = +(response.headers.get('Content-Length') || 0);
+      let receivedLength = 0;
+      
+      if (!reader) {
+          throw new Error("Failed to read video stream.");
+      }
+
+      let chunks = [];
+      while(true) {
+        const {done, value} = await reader.read();
+        if (done) break;
+
+        chunks.push(value);
+        receivedLength += value.length;
+        const progress = (receivedLength / contentLength) * 100;
+        setDownloadState(prev => prev ? { ...prev, progress: Math.round(progress) } : null);
+      }
+
+      const blob = new Blob(chunks);
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${title}.mp4`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+      
+      setDownloadState(prev => prev ? { ...prev, isDownloading: false, progress: 100 } : null);
+
+      toast({
+          title: "Download Complete!",
+          description: "Your video has been successfully downloaded.",
+      });
+
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: "Download Failed",
+        description: error.message || "Could not download the video. Please try again.",
+      });
+      setDownloadState(null);
+    }
   };
+
 
   const handlePaste = async () => {
     try {
@@ -138,22 +194,6 @@ export function Downloader() {
     }
   };
   
-  useEffect(() => {
-    let timer: NodeJS.Timeout;
-    if (downloadState?.isDownloading && downloadState.progress < 100) {
-      timer = setTimeout(() => {
-        setDownloadState(prev => prev ? { ...prev, progress: prev.progress + 5 } : null);
-      }, 150);
-    } else if (downloadState?.progress === 100 && downloadState.isDownloading) {
-      toast({
-        title: "Download Complete!",
-        description: "Your video has been successfully downloaded.",
-      });
-      setDownloadState(prev => prev ? { ...prev, isDownloading: false } : null);
-    }
-    return () => clearTimeout(timer);
-  }, [downloadState, toast]);
-
   return (
     <div className="space-y-8">
       <div className="text-center">
@@ -228,29 +268,34 @@ export function Downloader() {
       {videoDetails && (
         <Card className="w-full shadow-lg animate-in fade-in-50 duration-500">
           <CardContent className="p-6">
-            <div className="flex flex-col items-center gap-4">
-               <div className="w-full space-y-4 text-center">
-                 <h3 className="text-xl font-bold">{videoDetails.title}</h3>
+            <div className="flex flex-col items-center gap-6">
                 <div className="w-full aspect-video">
-                  <iframe
-                    src={`https://www.youtube.com/embed/${videoDetails.videoId}`}
-                    title={videoDetails.title}
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                    className="w-full h-full rounded-lg"
-                    data-ai-hint="video embed"
-                  ></iframe>
+                    <iframe
+                        src={`https://www.youtube.com/embed/${videoDetails.videoId}`}
+                        title={videoDetails.title}
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                        className="w-full h-full rounded-lg"
+                        data-ai-hint="video embed"
+                    ></iframe>
                 </div>
-                <div className="flex justify-center">
-                  <Button onClick={() => handleDownload('MP4')} size="lg" disabled={downloadState?.isDownloading}>
-                    <Download className="mr-2" /> Download MP4
-                  </Button>
+                <div className="w-full space-y-4 text-center">
+                    <h3 className="text-xl font-bold">{videoDetails.title}</h3>
+                    <div className="flex justify-center">
+                        <Button onClick={handleDownload} size="lg" disabled={downloadState?.isDownloading}>
+                            {downloadState?.isDownloading ? (
+                                <Loader2 className="mr-2 animate-spin" />
+                            ) : (
+                                <Download className="mr-2" />
+                            )}
+                            Download MP4
+                        </Button>
+                    </div>
                 </div>
-              </div>
             </div>
             {downloadState?.isDownloading && (
                <div className="space-y-2 pt-6">
-                 <p className="text-sm font-medium text-center">Downloading {downloadState.format}... {downloadState.progress}%</p>
+                 <p className="text-sm font-medium text-center">Downloading MP4... {downloadState.progress}%</p>
                  <Progress value={downloadState.progress} className="w-full h-3 [&>div]:bg-accent" />
                </div>
             )}
