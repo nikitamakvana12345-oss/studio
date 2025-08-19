@@ -4,6 +4,7 @@ import Link from "next/link";
 import { DownloadCloud } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 export function Header() {
   const pathname = usePathname();
@@ -22,7 +23,7 @@ export function Header() {
           <DownloadCloud className="h-6 w-6 text-primary" />
           <span className="font-bold">VideoRipper</span>
         </Link>
-        <nav className="flex items-center space-x-6 text-sm font-medium ml-auto">
+        <nav className="hidden md:flex items-center space-x-6 text-sm font-medium ml-auto">
           {navLinks.map((link) => (
             <Link
               key={link.href}
@@ -36,6 +37,9 @@ export function Header() {
             </Link>
           ))}
         </nav>
+        <div className="ml-auto flex items-center gap-4">
+           <ThemeToggle />
+        </div>
       </div>
     </header>
   );

@@ -15,7 +15,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { Download, Youtube, Loader2, Music } from "lucide-react";
+import { Download, Loader2, Music, Video } from "lucide-react";
 import Image from 'next/image';
 import { useToast } from "@/hooks/use-toast";
 
@@ -106,7 +106,7 @@ export function Downloader() {
       <Card className="w-full shadow-lg border-2 border-primary/20">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Youtube className="h-6 w-6 text-red-600" />
+            <Video className="h-6 w-6 text-primary" />
             <span>YouTube Downloader</span>
           </CardTitle>
         </CardHeader>
