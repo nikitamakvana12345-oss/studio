@@ -1,3 +1,4 @@
+
 export default function PrivacyPolicyPage() {
   return (
     <div className="container mx-auto max-w-4xl py-12 px-4">
@@ -5,6 +6,11 @@ export default function PrivacyPolicyPage() {
         <h1 className="text-4xl font-extrabold tracking-tight text-primary sm:text-5xl md:text-6xl">
           Privacy Policy
         </h1>
+        <div className="my-8 flex justify-center">
+          <div className="w-full h-24 bg-muted/50 border border-dashed rounded-lg flex items-center justify-center text-muted-foreground">
+            AdSense Ad Slot
+          </div>
+        </div>
         <div className="space-y-4 text-muted-foreground">
           <p>
             Your privacy is important to us. It is Media Bitesz's policy to respect your privacy regarding any information we may collect from you across our website.
