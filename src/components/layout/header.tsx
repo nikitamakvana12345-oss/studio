@@ -10,7 +10,7 @@ export function Header() {
 
   const navLinks = [
     { href: "/", label: "Downloader" },
-    { href: "/hashtag-generator", label: "Hashtag Generator" },
+    { href: "/about-us", label: "About Us" },
   ];
 
   return (
