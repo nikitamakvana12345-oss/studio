@@ -27,9 +27,9 @@ export function Header() {
   return (
     <header className="bg-background/80 sticky top-0 z-50 w-full border-b backdrop-blur">
       <div className="container flex h-16 items-center justify-between">
-        <Link href="/" className="flex items-center space-x-2">
-          <DownloadCloud className="h-6 w-6 text-primary" />
-          <span className="font-bold">Media Bitesz</span>
+        <Link href="/" className="flex items-center gap-2">
+          <DownloadCloud className="h-8 w-8 text-primary" />
+          <span className="text-xl font-bold">Media Bitesz</span>
         </Link>
         
         <div className="flex items-center justify-end gap-4">
@@ -58,9 +58,9 @@ export function Header() {
               </SheetTrigger>
               <SheetContent side="right">
                 <div className="flex flex-col gap-4 p-4">
-                <Link href="/" className="mr-6 flex items-center space-x-2">
-                  <DownloadCloud className="h-6 w-6 text-primary" />
-                  <span className="font-bold">Media Bitesz</span>
+                <Link href="/" className="flex items-center gap-2 mb-4">
+                  <DownloadCloud className="h-8 w-8 text-primary" />
+                  <span className="text-xl font-bold">Media Bitesz</span>
                 </Link>
                   {navLinks.map((link) => (
                     <Link
