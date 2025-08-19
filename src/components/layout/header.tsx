@@ -27,7 +27,7 @@ export function Header() {
   return (
     <header className="bg-background/80 sticky top-0 z-50 w-full border-b backdrop-blur">
       <div className="container flex h-16 items-center justify-between">
-        <Link href="/" className="flex items-center gap-2">
+        <Link href="/" className="flex items-center gap-2 pl-4">
           <DownloadCloud className="h-8 w-8 text-primary" />
           <span className="text-xl font-bold">Media Bitesz</span>
         </Link>
