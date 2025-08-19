@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from "react";
@@ -15,7 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { Download, Loader2, Music, Video } from "lucide-react";
+import { Download, Loader2, Music, Video, ClipboardPaste } from "lucide-react";
 import Image from 'next/image';
 import { useToast } from "@/hooks/use-toast";
 
@@ -86,6 +87,21 @@ export function Downloader() {
   const handleDownload = (format: 'MP4' | 'MP3') => {
     setDownloadState({ format, progress: 0, isDownloading: true });
   };
+
+  const handlePaste = async () => {
+    try {
+      const text = await navigator.clipboard.readText();
+      if (text) {
+        form.setValue("url", text);
+      }
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Failed to paste",
+        description: "Could not read from clipboard. Please paste manually.",
+      });
+    }
+  };
   
   useEffect(() => {
     let timer: NodeJS.Timeout;
@@ -133,7 +149,23 @@ export function Downloader() {
                 render={({ field }) => (
                   <FormItem className="w-full">
                     <FormControl>
-                      <Input placeholder="https://www.youtube.com/watch?v=..." {...field} className="text-base h-12" />
+                      <div className="relative">
+                        <Input
+                          placeholder="https://www.youtube.com/watch?v=..."
+                          {...field}
+                          className="text-base h-12 pr-12"
+                        />
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          className="absolute top-1/2 right-1 -translate-y-1/2 h-10 w-10 text-muted-foreground hover:text-primary"
+                          onClick={handlePaste}
+                          aria-label="Paste URL"
+                        >
+                          <ClipboardPaste className="h-5 w-5" />
+                        </Button>
+                      </div>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
