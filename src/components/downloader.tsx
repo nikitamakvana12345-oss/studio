@@ -235,8 +235,8 @@ export function Downloader() {
       {videoDetails && (
         <Card className="w-full shadow-lg animate-in fade-in-50 duration-500">
           <CardContent className="p-6">
-            <div className="flex flex-col md:flex-row items-center gap-6">
-              <div className="w-full md:w-1/3 shrink-0 aspect-video">
+            <div className="flex flex-col items-center gap-4">
+              <div className="w-full aspect-video">
                 <iframe
                   src={`https://www.youtube.com/embed/${videoDetails.videoId}`}
                   title={videoDetails.title}
@@ -246,7 +246,7 @@ export function Downloader() {
                   data-ai-hint="video embed"
                 ></iframe>
               </div>
-              <div className="w-full md:w-2/3 space-y-4">
+              <div className="w-full space-y-4 text-center">
                 <h3 className="text-xl font-bold">{videoDetails.title}</h3>
                 <div className="flex justify-center">
                   <Button onClick={() => handleDownload('MP4')} size="lg" disabled={downloadState?.isDownloading}>
