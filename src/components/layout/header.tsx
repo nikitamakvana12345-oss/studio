@@ -62,14 +62,14 @@ export function Header() {
                     <DownloadCloud className="h-8 w-8 text-primary" />
                     <span className="text-xl font-bold">Media Bitesz</span>
                   </Link>
-                  <div className="flex flex-wrap items-center gap-4">
+                  <div className="flex flex-col items-start gap-4">
                     {navLinks.map((link) => (
                       <Link
                         key={link.href}
                         href={link.href}
                         onClick={() => setIsMobileMenuOpen(false)}
                         className={cn(
-                          "text-sm",
+                          "text-base",
                           pathname === link.href ? "text-primary" : "text-muted-foreground"
                         )}
                       >
