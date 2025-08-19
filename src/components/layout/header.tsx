@@ -1,13 +1,21 @@
 "use client";
 
 import Link from "next/link";
-import { DownloadCloud } from "lucide-react";
+import { DownloadCloud, Menu } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/theme-toggle";
+import {
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { Button } from "@/components/ui/button";
+import { useState } from "react";
 
 export function Header() {
   const pathname = usePathname();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const navLinks = [
     { href: "/", label: "Home" },
@@ -39,6 +47,37 @@ export function Header() {
             ))}
           </nav>
            <ThemeToggle />
+           <div className="md:hidden">
+            <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="icon">
+                  <Menu />
+                  <span className="sr-only">Toggle Menu</span>
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="right">
+                <div className="flex flex-col gap-4 p-4">
+                <Link href="/" className="mr-6 flex items-center space-x-2">
+                  <DownloadCloud className="h-6 w-6 text-primary" />
+                  <span className="font-bold">VideoRipper</span>
+                </Link>
+                  {navLinks.map((link) => (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                       onClick={() => setIsMobileMenuOpen(false)}
+                      className={cn(
+                        "text-lg",
+                        pathname === link.href ? "text-primary" : "text-muted-foreground"
+                      )}
+                    >
+                      {link.label}
+                    </Link>
+                  ))}
+                </div>
+              </SheetContent>
+            </Sheet>
+           </div>
         </div>
       </div>
     </header>
