@@ -6,7 +6,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CheckCircle, ShieldCheck, Download, Zap } from "lucide-react";
+import { CheckCircle, ShieldCheck, Download, Zap, UserX, Laptop } from "lucide-react";
 
 const features = [
   {
@@ -28,6 +28,16 @@ const features = [
     icon: <ShieldCheck className="w-8 h-8 text-primary" />,
     title: "Secure and Private",
     description: "Your privacy is our priority. We don't store your download history or personal information."
+  },
+  {
+    icon: <Laptop className="w-8 h-8 text-primary" />,
+    title: "Cross-Platform Compatible",
+    description: "Our service works on all major devices and browsers, including Windows, macOS, iOS, and Android."
+  },
+  {
+    icon: <UserX className="w-8 h-8 text-primary" />,
+    title: "No Registration Required",
+    description: "Download videos without the need to create an account. It's quick, easy, and hassle-free."
   }
 ];
 
