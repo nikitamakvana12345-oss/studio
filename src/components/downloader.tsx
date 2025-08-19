@@ -16,7 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { Download, Loader2, Music, Video, ClipboardPaste } from "lucide-react";
+import { Download, Loader2, Video, ClipboardPaste } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 const formSchema = z.object({
@@ -29,7 +29,7 @@ type VideoDetails = {
 };
 
 type DownloadState = {
-  format: 'MP4' | 'MP3';
+  format: 'MP4';
   progress: number;
   isDownloading: boolean;
 };
@@ -119,7 +119,7 @@ export function Downloader() {
     }
   }
 
-  const handleDownload = (format: 'MP4' | 'MP3') => {
+  const handleDownload = (format: 'MP4') => {
     setDownloadState({ format, progress: 0, isDownloading: true });
   };
 
@@ -244,12 +244,9 @@ export function Downloader() {
               </div>
               <div className="w-full md:w-2/3 space-y-4">
                 <h3 className="text-xl font-bold">{videoDetails.title}</h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="flex justify-center">
                   <Button onClick={() => handleDownload('MP4')} size="lg" disabled={downloadState?.isDownloading}>
                     <Download className="mr-2" /> Download MP4
-                  </Button>
-                  <Button onClick={() => handleDownload('MP3')} size="lg" variant="secondary" disabled={downloadState?.isDownloading}>
-                    <Music className="mr-2" /> Download MP3
                   </Button>
                 </div>
               </div>
