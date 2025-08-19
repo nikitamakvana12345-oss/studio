@@ -8,13 +8,17 @@ export async function getVideoInfo(videoId: string) {
     const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
     const info = await ytdl.getInfo(videoUrl);
 
+    // Prefer MP4 formats that have both video and audio
     const format = ytdl.chooseFormat(info.formats, { 
       quality: 'highest',
-      filter: (format) => format.container === 'mp4' && format.hasAudio && format.hasVideo,
+      filter: (format) => 
+        format.container === 'mp4' && 
+        format.hasVideo && 
+        format.hasAudio
     });
     
     if (!format) {
-      throw new Error('No suitable MP4 format found for this video.');
+      throw new Error('No suitable MP4 format with both video and audio was found for this video.');
     }
 
     return {
