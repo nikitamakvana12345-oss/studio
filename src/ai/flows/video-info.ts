@@ -11,12 +11,12 @@ import { ai } from '@/ai/genkit';
 import { z } from 'zod';
 import ytdl from 'ytdl-core';
 
-export const GetVideoInfoInputSchema = z.object({
+const GetVideoInfoInputSchema = z.object({
   url: z.string().url().describe('The YouTube video URL.'),
 });
 export type GetVideoInfoInput = z.infer<typeof GetVideoInfoInputSchema>;
 
-export const GetVideoInfoOutputSchema = z.object({
+const GetVideoInfoOutputSchema = z.object({
   title: z.string().describe('The title of the video.'),
   thumbnailUrl: z.string().url().describe('The URL of the video thumbnail.'),
 });
