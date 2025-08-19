@@ -17,23 +17,18 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Download, Loader2, Video, ClipboardPaste } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { getVideoInfo } from "@/app/actions/download";
+import { getVideoInfo } from "@/ai/flows/get-video-info-flow";
+import type { VideoInfo } from "@/ai/schemas/video-info-schemas";
+
 
 const formSchema = z.object({
   url: z.string().url({ message: "Please enter a valid YouTube URL." }),
 });
 
-type VideoDetails = {
-  title: string;
-  videoId: string;
-  author: string;
-  thumbnail: string;
-};
-
 export function Downloader() {
   const [isFetching, setIsFetching] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
-  const [videoDetails, setVideoDetails] = useState<VideoDetails | null>(null);
+  const [videoDetails, setVideoDetails] = useState<VideoInfo | null>(null);
   const { toast } = useToast();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -43,67 +38,13 @@ export function Downloader() {
     },
   });
 
-  const getYouTubeVideoId = (url: string): string | null => {
-    let videoId: string | null = null;
-    try {
-      const urlObject = new URL(url);
-      const hostname = urlObject.hostname;
-      
-      if (hostname.includes('youtube.com')) {
-        if (urlObject.pathname.includes('/watch')) {
-          videoId = urlObject.searchParams.get('v');
-        } else if (urlObject.pathname.includes('/shorts/')) {
-          videoId = urlObject.pathname.split('/shorts/')[1].split('?')[0];
-        } else if (urlObject.pathname.includes('/embed/')) {
-          videoId = urlObject.pathname.split('/embed/')[1].split('?')[0];
-        }
-      } else if (hostname.includes('youtu.be')) {
-        videoId = urlObject.pathname.slice(1).split('?')[0];
-      }
-    } catch (error) {
-      // Invalid URL format, fallback to regex
-    }
-
-    if (!videoId) {
-        const regex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/ ]{11})/;
-        const match = url.match(regex);
-        if (match) {
-            videoId = match[1];
-        }
-    }
-    
-    return videoId;
-  };
-
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsFetching(true);
     setVideoDetails(null);
 
     try {
-      const videoId = getYouTubeVideoId(values.url);
-
-      if (!videoId) {
-        throw new Error("Invalid YouTube URL. Could not extract video ID.");
-      }
-      
-      const oembedUrl = `https://www.youtube.com/oembed?url=${encodeURIComponent(`https://www.youtube.com/watch?v=${videoId}`)}&format=json`;
-      const response = await fetch(oembedUrl);
-
-      if (!response.ok) {
-        const errorData = await response.text();
-        console.error("YouTube oEmbed error:", errorData);
-        throw new Error("Could not fetch video details. The video might be private, region-locked, or removed.");
-      }
-
-      const data = await response.json();
-      
-      setVideoDetails({
-        title: data.title,
-        author: data.author_name,
-        thumbnail: data.thumbnail_url,
-        videoId: videoId,
-      });
-
+      const result = await getVideoInfo({ youtubeUrl: values.url });
+      setVideoDetails(result);
     } catch (error: any) {
       toast({
         variant: "destructive",
@@ -117,15 +58,13 @@ export function Downloader() {
   }
 
   const handleDownload = async () => {
-    if (!videoDetails) return;
+    if (!videoDetails?.downloadUrl) return;
 
     setIsDownloading(true);
 
     try {
-      const { videoUrl } = await getVideoInfo(videoDetails.videoId);
-      
       // Open the video URL in a new tab
-      window.open(videoUrl, '_blank');
+      window.open(videoDetails.downloadUrl, '_blank');
 
       toast({
           title: "Redirecting to Download",
@@ -247,7 +186,7 @@ export function Downloader() {
                 <div className="w-full space-y-4 text-center">
                     <h3 className="text-xl font-bold">{videoDetails.title}</h3>
                     <div className="flex justify-center">
-                        <Button onClick={handleDownload} size="lg" disabled={isDownloading}>
+                        <Button onClick={handleDownload} size="lg" disabled={isDownloading || !videoDetails.downloadUrl}>
                             {isDownloading ? (
                                 <Loader2 className="mr-2 animate-spin" />
                             ) : (
