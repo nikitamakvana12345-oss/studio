@@ -32,6 +32,12 @@ export default function PrivacyPolicyPage() {
           </p>
           <p>This policy is effective as of {new Date().getFullYear()}.</p>
         </div>
+
+        <div className="my-8 flex justify-center">
+          <div className="w-full h-24 bg-muted/50 border border-dashed rounded-lg flex items-center justify-center text-muted-foreground">
+            AdSense Ad Slot
+          </div>
+        </div>
       </div>
     </div>
   );

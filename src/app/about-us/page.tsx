@@ -33,6 +33,12 @@ export default function AboutUsPage() {
                 </Button>
             </div>
         </div>
+
+        <div className="my-8 flex justify-center">
+          <div className="w-full h-24 bg-muted/50 border border-dashed rounded-lg flex items-center justify-center text-muted-foreground">
+            AdSense Ad Slot
+          </div>
+        </div>
       </div>
     </div>
   );

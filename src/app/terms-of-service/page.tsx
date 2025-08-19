@@ -5,6 +5,11 @@ export default function TermsOfServicePage() {
         <h1 className="text-4xl font-extrabold tracking-tight text-primary sm:text-5xl md:text-6xl">
           Terms of Service
         </h1>
+        <div className="my-8 flex justify-center">
+          <div className="w-full h-24 bg-muted/50 border border-dashed rounded-lg flex items-center justify-center text-muted-foreground">
+            AdSense Ad Slot
+          </div>
+        </div>
         <div className="space-y-4 text-muted-foreground">
           <h2 className="text-2xl font-bold text-foreground pt-4">1. Terms</h2>
           <p>
@@ -29,6 +34,11 @@ export default function TermsOfServicePage() {
           <p>
             These terms and conditions are governed by and construed in accordance with the laws of our location and you irrevocably submit to the exclusive jurisdiction of the courts in that State or location.
           </p>
+        </div>
+        <div className="my-8 flex justify-center">
+          <div className="w-full h-24 bg-muted/50 border border-dashed rounded-lg flex items-center justify-center text-muted-foreground">
+            AdSense Ad Slot
+          </div>
         </div>
       </div>
     </div>
