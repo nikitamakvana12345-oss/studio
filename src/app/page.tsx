@@ -146,7 +146,7 @@ export default function Home() {
       </section>
 
       <div className="my-8 flex justify-center">
-        <div className="w-full md:w-[300px] h-[250px] bg-muted/50 border border-dashed rounded-lg flex items-center justify-center text-muted-foreground">
+        <div className="w-full h-[90px] bg-muted/50 border border-dashed rounded-lg flex items-center justify-center text-muted-foreground">
           Medium Ad Slot
         </div>
       </div>
