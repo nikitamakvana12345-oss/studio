@@ -26,18 +26,13 @@ export function Header() {
 
   return (
     <header className="bg-background/80 sticky top-0 z-50 w-full border-b backdrop-blur">
-      <div className="container flex h-16 items-center">
-        <div className="flex-none flex items-center justify-start">
-          <Link href="/" className="flex items-center space-x-2">
-            <DownloadCloud className="h-6 w-6 text-primary" />
-            <span className="font-bold">Media Bitesz</span>
-          </Link>
-        </div>
-
-        <div className="flex-grow flex items-center justify-center">
-        </div>
+      <div className="container flex h-16 items-center justify-between">
+        <Link href="/" className="flex items-center space-x-2">
+          <DownloadCloud className="h-6 w-6 text-primary" />
+          <span className="font-bold">Media Bitesz</span>
+        </Link>
         
-        <div className="flex-none flex items-center justify-end gap-4">
+        <div className="flex items-center justify-end gap-4">
            <nav className="hidden md:flex items-center space-x-6 text-sm font-medium">
             {navLinks.map((link) => (
               <Link

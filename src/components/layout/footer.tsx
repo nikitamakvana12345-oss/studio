@@ -9,7 +9,7 @@ export function Footer() {
             <Link href="/privacy-policy" className="transition-colors hover:text-primary">Privacy and Policy</Link>
             <Link href="/terms-of-service" className="transition-colors hover:text-primary">Terms and Conditions</Link>
         </div>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-sm text-muted-foreground text-center">
           © {new Date().getFullYear()} Media Bitesz. All rights reserved.
         </p>
       </div>
