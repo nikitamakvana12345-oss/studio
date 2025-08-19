@@ -60,6 +60,12 @@ export default function Home() {
         </div>
       </section>
 
+      <div className="my-8 flex justify-center">
+        <div className="w-full h-24 bg-muted/50 border border-dashed rounded-lg flex items-center justify-center text-muted-foreground">
+          AdSense Ad Slot
+        </div>
+      </div>
+
       <section className="py-16">
         <div className="text-center mb-12">
            <h2 className="text-3xl font-extrabold tracking-tight text-primary sm:text-4xl">
@@ -138,6 +144,12 @@ export default function Home() {
           </AccordionItem>
         </Accordion>
       </section>
+
+      <div className="my-8 flex justify-center">
+        <div className="w-full md:w-[300px] h-[250px] bg-muted/50 border border-dashed rounded-lg flex items-center justify-center text-muted-foreground">
+          Medium Ad Slot
+        </div>
+      </div>
     </div>
   );
 }
