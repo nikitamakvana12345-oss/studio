@@ -13,11 +13,12 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Download, Loader2, Music, Video } from "lucide-react";
 import Image from 'next/image';
 import { useToast } from "@/hooks/use-toast";
+import { getVideoInfo, GetVideoInfoOutput } from "@/ai/flows/video-info";
 
 const formSchema = z.object({
   url: z.string().url({ message: "Please enter a valid YouTube URL." }),
@@ -31,7 +32,7 @@ type DownloadState = {
 
 export function Downloader() {
   const [isProcessing, setIsProcessing] = useState(false);
-  const [videoDetails, setVideoDetails] = useState<{ title: string; thumbnailUrl: string } | null>(null);
+  const [videoDetails, setVideoDetails] = useState<GetVideoInfoOutput | null>(null);
   const [downloadState, setDownloadState] = useState<DownloadState | null>(null);
   const { toast } = useToast();
 
@@ -42,31 +43,28 @@ export function Downloader() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsProcessing(true);
     setVideoDetails(null);
     setDownloadState(null);
 
-    setTimeout(() => {
-      try {
-        const url = new URL(values.url);
-        if (!/youtube\.com|youtu\.be/.test(url.hostname)) {
-          throw new Error("Invalid YouTube URL");
-        }
-        setVideoDetails({
-          title: "Your Awesome YouTube Video Title",
-          thumbnailUrl: "https://placehold.co/480x270.png",
-        });
-      } catch (error) {
-        toast({
-          variant: "destructive",
-          title: "Invalid URL",
-          description: "Could not extract video details. Please check the URL and try again.",
-        });
-        setVideoDetails(null);
+    try {
+      const url = new URL(values.url);
+      if (!/youtube\.com|youtu\.be/.test(url.hostname)) {
+        throw new Error("Invalid YouTube URL");
       }
+      const videoInfo = await getVideoInfo({ url: values.url });
+      setVideoDetails(videoInfo);
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: "Error fetching video",
+        description: error.message || "Could not extract video details. Please check the URL and try again.",
+      });
+      setVideoDetails(null);
+    } finally {
       setIsProcessing(false);
-    }, 2000);
+    }
   }
 
   const handleDownload = (format: 'MP4' | 'MP3') => {
