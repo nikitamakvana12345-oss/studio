@@ -7,7 +7,7 @@ export default function PrivacyPolicyPage() {
         </h1>
         <div className="space-y-4 text-muted-foreground">
           <p>
-            Your privacy is important to us. It is VideoRipper's policy to respect your privacy regarding any information we may collect from you across our website.
+            Your privacy is important to us. It is Media Bitesz's policy to respect your privacy regarding any information we may collect from you across our website.
           </p>
           <h2 className="text-2xl font-bold text-foreground pt-4">1. Information we collect</h2>
           <p>

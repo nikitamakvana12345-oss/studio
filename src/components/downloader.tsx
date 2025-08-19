@@ -96,7 +96,7 @@ export function Downloader() {
     <div className="space-y-8">
       <div className="text-center">
         <h1 className="text-4xl font-extrabold tracking-tight text-primary sm:text-5xl md:text-6xl font-headline">
-          VideoRipper
+          Media Bitesz
         </h1>
         <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
           Download YouTube videos and audio quickly and easily. Paste a link to get started.

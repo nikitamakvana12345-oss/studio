@@ -10,7 +10,7 @@ export function Footer() {
             <Link href="/terms-of-service" className="transition-colors hover:text-primary">Terms and Conditions</Link>
         </div>
         <p className="text-sm text-muted-foreground">
-          © {new Date().getFullYear()} VideoRipper. All rights reserved.
+          © {new Date().getFullYear()} Media Bitesz. All rights reserved.
         </p>
       </div>
     </footer>

@@ -30,13 +30,13 @@ export function Header() {
         <div className="flex-1 flex items-center justify-start">
           <Link href="/" className="flex items-center space-x-2">
             <DownloadCloud className="h-6 w-6 text-primary" />
-            <span className="font-bold md:hidden">VideoRipper</span>
+            <span className="font-bold md:hidden">Media Bitesz</span>
           </Link>
         </div>
 
         <div className="flex-1 flex items-center justify-center">
           <Link href="/" className="hidden md:flex items-center space-x-2">
-            <span className="text-2xl font-bold">VideoRipper</span>
+            <span className="text-2xl font-bold">Media Bitesz</span>
           </Link>
         </div>
         
@@ -68,7 +68,7 @@ export function Header() {
                 <div className="flex flex-col gap-4 p-4">
                 <Link href="/" className="mr-6 flex items-center space-x-2">
                   <DownloadCloud className="h-6 w-6 text-primary" />
-                  <span className="font-bold">VideoRipper</span>
+                  <span className="font-bold">Media Bitesz</span>
                 </Link>
                   {navLinks.map((link) => (
                     <Link

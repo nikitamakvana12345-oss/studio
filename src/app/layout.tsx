@@ -7,9 +7,9 @@ import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/theme-provider";
 
 export const metadata: Metadata = {
-  title: "VideoRipper - Fast YouTube Downloader & Hashtag Generator",
+  title: "Media Bitesz - Fast YouTube Downloader & Converter",
   description:
-    "Quickly download YouTube videos in MP4, MP3, and other formats. Use our AI-powered tool to generate trending Instagram hashtags for your videos. Fast, free, and easy to use.",
+    "Quickly download YouTube videos in MP4, MP3, and other formats. Fast, free, and easy to use.",
 };
 
 export default function RootLayout({
