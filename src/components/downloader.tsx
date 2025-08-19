@@ -142,12 +142,12 @@ export function Downloader() {
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col sm:flex-row items-start gap-2">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               <FormField
                 control={form.control}
                 name="url"
                 render={({ field }) => (
-                  <FormItem className="w-full">
+                  <FormItem>
                     <FormControl>
                       <div className="relative">
                         <Input
@@ -171,14 +171,16 @@ export function Downloader() {
                   </FormItem>
                 )}
               />
-              <Button type="submit" disabled={isProcessing} className="w-full sm:w-auto h-12 text-base shrink-0">
-                {isProcessing ? (
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                ) : (
-                  <Download className="mr-2 h-4 w-4" />
-                )}
-                Fetch Video
-              </Button>
+              <div className="flex justify-center">
+                  <Button type="submit" disabled={isProcessing} className="h-12 text-base px-8">
+                    {isProcessing ? (
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    ) : (
+                      <Download className="mr-2 h-4 w-4" />
+                    )}
+                    Fetch Video
+                  </Button>
+              </div>
             </form>
           </Form>
         </CardContent>
