@@ -1,3 +1,6 @@
+import { Button } from "@/components/ui/button";
+import { Mail } from "lucide-react";
+
 export default function AboutUsPage() {
   return (
     <div className="container mx-auto max-w-4xl py-12 px-4">
@@ -14,6 +17,22 @@ export default function AboutUsPage() {
         <p className="text-lg text-muted-foreground">
           We are constantly working to improve our service and add new features. Thank you for choosing Media Bitesz!
         </p>
+        
+        <div className="pt-8 text-center">
+            <h2 className="text-3xl font-bold text-primary tracking-tight">
+                Sponsorship & Contact
+            </h2>
+            <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
+                Interested in sponsoring our platform or have a business inquiry? We'd love to hear from you.
+            </p>
+            <div className="mt-6">
+                <Button asChild size="lg">
+                    <a href="mailto:santoshmakvana07@gmail.com">
+                        <Mail className="mr-2" /> Contact Us
+                    </a>
+                </Button>
+            </div>
+        </div>
       </div>
     </div>
   );
