@@ -1,9 +1,10 @@
+
 export default function TermsOfServicePage() {
   return (
     <div className="container mx-auto max-w-4xl py-12 px-4">
       <div className="space-y-6">
         <h1 className="text-4xl font-extrabold tracking-tight text-primary sm:text-5xl md:text-6xl">
-          Terms of Service
+          Terms & Condition
         </h1>
         <div className="my-8 flex justify-center">
           <div className="w-full h-24 bg-muted/50 border border-dashed rounded-lg flex items-center justify-center text-muted-foreground">
