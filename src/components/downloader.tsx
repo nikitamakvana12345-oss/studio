@@ -48,21 +48,35 @@ export function Downloader() {
   });
 
   const getYouTubeVideoId = (url: string): string | null => {
-    const urlObject = new URL(url);
-    if (urlObject.hostname === 'youtu.be') {
-      return urlObject.pathname.slice(1);
-    }
-    if (urlObject.hostname.includes('youtube.com')) {
-      const videoId = urlObject.searchParams.get('v');
-      if (videoId) {
-        return videoId;
+    let videoId: string | null = null;
+    try {
+      const urlObject = new URL(url);
+      const hostname = urlObject.hostname;
+      
+      if (hostname.includes('youtube.com')) {
+        if (urlObject.pathname.includes('/watch')) {
+          videoId = urlObject.searchParams.get('v');
+        } else if (urlObject.pathname.includes('/shorts/')) {
+          videoId = urlObject.pathname.split('/shorts/')[1].split('?')[0];
+        } else if (urlObject.pathname.includes('/embed/')) {
+          videoId = urlObject.pathname.split('/embed/')[1].split('?')[0];
+        }
+      } else if (hostname.includes('youtu.be')) {
+        videoId = urlObject.pathname.slice(1).split('?')[0];
       }
-      const pathParts = urlObject.pathname.split('/');
-      if (pathParts[1] === 'embed') {
-        return pathParts[2];
-      }
+    } catch (error) {
+      // Invalid URL format, fallback to regex
     }
-    return null;
+
+    if (!videoId) {
+        const regex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/ ]{11})/;
+        const match = url.match(regex);
+        if (match) {
+            videoId = match[1];
+        }
+    }
+    
+    return videoId;
   };
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
@@ -77,10 +91,13 @@ export function Downloader() {
         throw new Error("Invalid YouTube URL. Could not extract video ID.");
       }
       
-      const response = await fetch(`https://www.youtube.com/oembed?url=${encodeURIComponent(values.url)}&format=json`);
+      const oembedUrl = `https://www.youtube.com/oembed?url=${encodeURIComponent(`https://www.youtube.com/watch?v=${videoId}`)}&format=json`;
+      const response = await fetch(oembedUrl);
 
       if (!response.ok) {
-        throw new Error("Could not extract video details. The video might be private or removed.");
+        const errorData = await response.text();
+        console.error("YouTube oEmbed error:", errorData);
+        throw new Error("Could not extract video details. The video might be private, region-locked, or removed.");
       }
 
       const data = await response.json();
@@ -254,4 +271,5 @@ export function Downloader() {
       </div>
     </div>
   );
-}
+
+    
