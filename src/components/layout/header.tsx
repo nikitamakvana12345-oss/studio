@@ -9,7 +9,9 @@ export function Header() {
   const pathname = usePathname();
 
   const navLinks = [
-    { href: "/", label: "Downloader" },
+    { href: "/", label: "Home" },
+    { href: "/privacy-policy", label: "Privacy" },
+    { href: "/terms-of-service", label: "Terms" },
     { href: "/about-us", label: "About Us" },
   ];
 
@@ -20,7 +22,7 @@ export function Header() {
           <DownloadCloud className="h-6 w-6 text-primary" />
           <span className="font-bold">VideoRipper</span>
         </Link>
-        <nav className="flex items-center space-x-6 text-sm font-medium">
+        <nav className="flex items-center space-x-6 text-sm font-medium ml-auto">
           {navLinks.map((link) => (
             <Link
               key={link.href}
