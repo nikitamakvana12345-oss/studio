@@ -17,7 +17,6 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Download, Loader2, Music, Video, ClipboardPaste } from "lucide-react";
-import Image from 'next/image';
 import { useToast } from "@/hooks/use-toast";
 
 const formSchema = z.object({
@@ -26,7 +25,7 @@ const formSchema = z.object({
 
 type VideoDetails = {
   title: string;
-  thumbnailUrl: string;
+  videoId: string;
 };
 
 type DownloadState = {
@@ -48,15 +47,34 @@ export function Downloader() {
     },
   });
 
+  const getYouTubeVideoId = (url: string): string | null => {
+    const urlObject = new URL(url);
+    if (urlObject.hostname === 'youtu.be') {
+      return urlObject.pathname.slice(1);
+    }
+    if (urlObject.hostname.includes('youtube.com')) {
+      const videoId = urlObject.searchParams.get('v');
+      if (videoId) {
+        return videoId;
+      }
+      const pathParts = urlObject.pathname.split('/');
+      if (pathParts[1] === 'embed') {
+        return pathParts[2];
+      }
+    }
+    return null;
+  };
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsProcessing(true);
     setVideoDetails(null);
     setDownloadState(null);
 
     try {
-      const url = new URL(values.url);
-      if (!/youtube\.com|youtu\.be/.test(url.hostname)) {
-        throw new Error("Invalid YouTube URL. Please use a youtube.com or youtu.be link.");
+      const videoId = getYouTubeVideoId(values.url);
+
+      if (!videoId) {
+        throw new Error("Invalid YouTube URL. Could not extract video ID.");
       }
       
       const response = await fetch(`https://www.youtube.com/oembed?url=${encodeURIComponent(values.url)}&format=json`);
@@ -69,7 +87,7 @@ export function Downloader() {
       
       setVideoDetails({
         title: data.title,
-        thumbnailUrl: data.thumbnail_url,
+        videoId: videoId,
       });
 
     } catch (error: any) {
@@ -197,15 +215,15 @@ export function Downloader() {
         <Card className="w-full shadow-lg animate-in fade-in-50 duration-500">
           <CardContent className="p-6">
             <div className="flex flex-col md:flex-row items-center gap-6">
-              <div className="w-full md:w-1/3 shrink-0">
-                <Image
-                  src={videoDetails.thumbnailUrl}
-                  alt={videoDetails.title}
-                  width={480}
-                  height={270}
-                  className="object-cover w-full h-auto rounded-lg"
-                  data-ai-hint="video thumbnail"
-                />
+              <div className="w-full md:w-1/3 shrink-0 aspect-video">
+                <iframe
+                  src={`https://www.youtube.com/embed/${videoDetails.videoId}`}
+                  title={videoDetails.title}
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  className="w-full h-full rounded-lg"
+                  data-ai-hint="video embed"
+                ></iframe>
               </div>
               <div className="w-full md:w-2/3 space-y-4">
                 <h3 className="text-xl font-bold">{videoDetails.title}</h3>
