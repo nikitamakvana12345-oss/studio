@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -15,7 +15,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
 import { Download, Loader2, Video, ClipboardPaste } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { getVideoInfo } from "@/app/actions/download";
@@ -31,15 +30,10 @@ type VideoDetails = {
   thumbnail: string;
 };
 
-type DownloadState = {
-  progress: number;
-  isDownloading: boolean;
-};
-
 export function Downloader() {
-  const [isProcessing, setIsProcessing] = useState(false);
+  const [isFetching, setIsFetching] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
   const [videoDetails, setVideoDetails] = useState<VideoDetails | null>(null);
-  const [downloadState, setDownloadState] = useState<DownloadState | null>(null);
   const { toast } = useToast();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -82,9 +76,8 @@ export function Downloader() {
   };
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    setIsProcessing(true);
+    setIsFetching(true);
     setVideoDetails(null);
-    setDownloadState(null);
 
     try {
       const videoId = getYouTubeVideoId(values.url);
@@ -119,62 +112,34 @@ export function Downloader() {
       });
       setVideoDetails(null);
     } finally {
-      setIsProcessing(false);
+      setIsFetching(false);
     }
   }
 
   const handleDownload = async () => {
     if (!videoDetails) return;
 
-    setDownloadState({ progress: 0, isDownloading: true });
+    setIsDownloading(true);
 
     try {
-      const { videoUrl, title } = await getVideoInfo(videoDetails.videoId);
-
-      const response = await fetch(videoUrl);
-      const reader = response.body?.getReader();
-      const contentLength = +(response.headers.get('Content-Length') || 0);
-      let receivedLength = 0;
+      const { videoUrl } = await getVideoInfo(videoDetails.videoId);
       
-      if (!reader) {
-          throw new Error("Failed to read video stream.");
-      }
-
-      let chunks = [];
-      while(true) {
-        const {done, value} = await reader.read();
-        if (done) break;
-
-        chunks.push(value);
-        receivedLength += value.length;
-        const progress = (receivedLength / contentLength) * 100;
-        setDownloadState(prev => prev ? { ...prev, progress: Math.round(progress) } : null);
-      }
-
-      const blob = new Blob(chunks);
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `${title}.mp4`;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      window.URL.revokeObjectURL(url);
-      
-      setDownloadState(prev => prev ? { ...prev, isDownloading: false, progress: 100 } : null);
+      // Open the video URL in a new tab
+      window.open(videoUrl, '_blank');
 
       toast({
-          title: "Download Complete!",
-          description: "Your video has been successfully downloaded.",
+          title: "Redirecting to Download",
+          description: "Your video is opening in a new tab.",
       });
 
     } catch (error: any) {
       toast({
         variant: "destructive",
         title: "Download Failed",
-        description: error.message || "Could not download the video. Please try again.",
+        description: error.message || "Could not get the download link. Please try again.",
       });
-      setDownloadState(null);
+    } finally {
+        setIsDownloading(false);
     }
   };
 
@@ -244,8 +209,8 @@ export function Downloader() {
                 )}
               />
               <div className="flex justify-center">
-                  <Button type="submit" disabled={isProcessing} className="h-12 text-base px-8">
-                    {isProcessing ? (
+                  <Button type="submit" disabled={isFetching} className="h-12 text-base px-8">
+                    {isFetching ? (
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     ) : (
                       <Download className="mr-2 h-4 w-4" />
@@ -258,7 +223,7 @@ export function Downloader() {
         </CardContent>
       </Card>
       
-      {isProcessing && (
+      {isFetching && (
         <div className="flex justify-center items-center flex-col gap-4 text-muted-foreground py-10">
           <Loader2 className="h-8 w-8 animate-spin text-primary" />
           <p>Analyzing link...</p>
@@ -282,8 +247,8 @@ export function Downloader() {
                 <div className="w-full space-y-4 text-center">
                     <h3 className="text-xl font-bold">{videoDetails.title}</h3>
                     <div className="flex justify-center">
-                        <Button onClick={handleDownload} size="lg" disabled={downloadState?.isDownloading}>
-                            {downloadState?.isDownloading ? (
+                        <Button onClick={handleDownload} size="lg" disabled={isDownloading}>
+                            {isDownloading ? (
                                 <Loader2 className="mr-2 animate-spin" />
                             ) : (
                                 <Download className="mr-2" />
@@ -293,12 +258,6 @@ export function Downloader() {
                     </div>
                 </div>
             </div>
-            {downloadState?.isDownloading && (
-               <div className="space-y-2 pt-6">
-                 <p className="text-sm font-medium text-center">Downloading MP4... {downloadState.progress}%</p>
-                 <Progress value={downloadState.progress} className="w-full h-3 [&>div]:bg-accent" />
-               </div>
-            )}
           </CardContent>
         </Card>
       )}
