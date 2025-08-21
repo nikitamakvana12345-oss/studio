@@ -17,7 +17,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Download, Loader2, Video, ClipboardPaste } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { getVideoInfo } from "@/ai/flows/get-video-info-flow";
+import { getVideoInfo } from "@/ai/flows/get-video-info-client";
 import type { VideoInfo } from "@/ai/schemas/video-info-schemas";
 
 
@@ -63,7 +63,6 @@ export function Downloader() {
     setIsDownloading(true);
 
     try {
-      // Open the video URL in a new tab
       window.open(videoDetails.downloadUrl, '_blank');
 
       toast({
@@ -192,7 +191,7 @@ export function Downloader() {
                             ) : (
                                 <Download className="mr-2" />
                             )}
-                            Download MP4
+                            Open on YouTube
                         </Button>
                     </div>
                 </div>
